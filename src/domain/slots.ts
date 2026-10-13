@@ -27,12 +27,14 @@ export function generateSlots(input: {
   now: Date;
 }): Slot[] {
   const { rules, timeOff, busy, options, now } = input;
+  if (!(options.sessionMinutes > 0) || !(options.bufferMinutes >= 0)) throw new Error('invalid_slot_options');
   const earliest = now.getTime() + options.minLeadHours * HOUR;
   const latest = now.getTime() + options.maxHorizonDays * DAY;
   const sessionMs = options.sessionMinutes * MINUTE;
   const stepMs = (options.sessionMinutes + options.bufferMinutes) * MINUTE;
   const blocked = [...timeOff, ...busy];
   const out: Slot[] = [];
+  const seen = new Set<number>();
 
   const first = new TZDate(now, TEHRAN);
   for (let i = 0; i <= options.maxHorizonDays + 1; i++) {
@@ -43,7 +45,7 @@ export function generateSlots(input: {
       const ruleStart = new TZDate(day.getFullYear(), day.getMonth(), day.getDate(), 0, toMinutes(rule.start), TEHRAN).getTime();
       const ruleEnd = new TZDate(day.getFullYear(), day.getMonth(), day.getDate(), 0, toMinutes(rule.end), TEHRAN).getTime();
       for (let s = ruleStart; s + sessionMs <= ruleEnd; s += stepMs) {
-        if (s < earliest || s > latest) continue;
+        if (s < earliest || s > latest || seen.has(s)) continue;
         const slot: Slot = {
           startsAt: new Date(s),
           endsAt: new Date(s + sessionMs),
@@ -51,6 +53,7 @@ export function generateSlots(input: {
         };
         const range = { start: slot.startsAt, end: slot.blockedUntil };
         if (blocked.some(b => overlaps(range, b))) continue;
+        seen.add(s);
         out.push(slot);
       }
     }

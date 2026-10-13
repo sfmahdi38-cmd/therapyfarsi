@@ -92,4 +92,20 @@ describe('generateSlots', () => {
     const times = slots.map(s => s.startsAt.getTime());
     expect([...times].sort((a, b) => a - b)).toEqual(times);
   });
+
+  it('overlapping weekly rules do not produce duplicate starts (final review #2)', () => {
+    const slots = generateSlots({
+      rules: [{ weekday: 6, start: '18:00', end: '20:00' }, { weekday: 6, start: '19:00', end: '21:00' }],
+      timeOff: [], busy: [], options: opts, now,
+    }).filter(s => s.startsAt < new Date('2026-10-25T00:00:00Z'));
+    const times = slots.map(s => s.startsAt.getTime());
+    expect(new Set(times).size).toBe(times.length);
+    expect(times).toHaveLength(3); // 18:00, 19:00, 20:00
+  });
+
+  it('rejects a non-positive session length or negative buffer instead of looping (final review #3)', () => {
+    const base = { rules: [{ weekday: 6, start: '18:00', end: '21:00' }], timeOff: [], busy: [], now };
+    expect(() => generateSlots({ ...base, options: { ...opts, sessionMinutes: 0, bufferMinutes: 0 } })).toThrow('invalid_slot_options');
+    expect(() => generateSlots({ ...base, options: { ...opts, bufferMinutes: -5 } })).toThrow('invalid_slot_options');
+  });
 });

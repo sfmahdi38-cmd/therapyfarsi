@@ -1,6 +1,8 @@
 import { MINUTE, type Interval, type SessionStatus } from './types';
 
-export type PresenceEvent = { profileId: string; type: 'joined' | 'left'; at: Date };
+// connectionId identifies one browser connection (the video provider's
+// participant-session id). Events without one share a single connection.
+export type PresenceEvent = { profileId: string; type: 'joined' | 'left'; at: Date; connectionId?: string };
 export type JudgeConfig = {
   thresholdRatio: number;
   waitMinutes: number;
@@ -30,27 +32,38 @@ function clip(intervals: Interval[], w: Interval): Interval[] {
   return out;
 }
 
+function merge(intervals: Interval[]): Interval[] {
+  const sorted = [...intervals].sort((a, b) => a.start.getTime() - b.start.getTime());
+  const out: Interval[] = [];
+  for (const i of sorted) {
+    const last = out[out.length - 1];
+    if (last && i.start.getTime() <= last.end.getTime()) {
+      if (i.end > last.end) last.end = i.end;
+    } else {
+      out.push({ start: i.start, end: i.end });
+    }
+  }
+  return out;
+}
+
 export function presenceIntervals(events: PresenceEvent[], profileId: string, window: Interval): Interval[] {
   const mine = events
     .filter(e => e.profileId === profileId)
     .sort((a, b) => a.at.getTime() - b.at.getTime() || (a.type === 'joined' ? -1 : 1));
   const raw: Interval[] = [];
-  let open = 0;
-  let openedAt: Date | null = null;
+  const openSince = new Map<string, Date>();
   for (const e of mine) {
+    const conn = e.connectionId ?? '';
+    const opened = openSince.get(conn);
     if (e.type === 'joined') {
-      if (open === 0) openedAt = e.at;
-      open++;
-    } else if (open > 0) {
-      open--;
-      if (open === 0 && openedAt) {
-        raw.push({ start: openedAt, end: e.at });
-        openedAt = null;
-      }
+      if (!opened) openSince.set(conn, e.at); // a repeated join on an open connection is a duplicate
+    } else if (opened) {
+      raw.push({ start: opened, end: e.at });
+      openSince.delete(conn);
     }
   }
-  if (open > 0 && openedAt) raw.push({ start: openedAt, end: window.end });
-  const clipped = clip(raw, window);
+  for (const opened of openSince.values()) raw.push({ start: opened, end: window.end });
+  const clipped = merge(clip(raw, window));
   return totalMs(clipped) < MIN_PRESENCE_MS ? [] : clipped;
 }
 

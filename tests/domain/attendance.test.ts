@@ -18,11 +18,16 @@ describe('presenceIntervals', () => {
     const iv = presenceIntervals([ev(D, 'joined', 0)], D, window);
     expect(totalMs(iv)).toBe(60 * 60_000);
   });
-  it('merges duplicate joins and out-of-order events (Review Focus 2)', () => {
-    const events = [ev(D, 'left', 40), ev(D, 'joined', 10), ev(D, 'joined', 0), ev(D, 'left', 20)];
-    // sorted: join0, join10, left20, left40 → open from 0 until both tabs left at 40
+  it('two tabs (distinct connections) out of order are merged, not double counted (Review Focus 2)', () => {
+    const c = (type: 'joined' | 'left', min: number, connectionId: string): PresenceEvent => ({ ...ev(D, type, min), connectionId });
+    const events = [c('left', 40, 'tab2'), c('joined', 10, 'tab2'), c('joined', 0, 'tab1'), c('left', 20, 'tab1')];
     const iv = presenceIntervals(events, D, window);
     expect(totalMs(iv)).toBe(40 * 60_000);
+  });
+  it('a duplicated join on the same connection does not outlive its leave (final review #1)', () => {
+    const events = [ev(D, 'joined', 0), ev(D, 'joined', 0), ev(D, 'left', 5)];
+    const iv = presenceIntervals(events, D, window);
+    expect(totalMs(iv)).toBe(5 * 60_000);
   });
   it('under 60s total counts as absent', () => {
     const iv = presenceIntervals([ev(D, 'joined', 0), { profileId: D, type: 'left', at: new Date(m(0).getTime() + 59_000) }], D, window);
