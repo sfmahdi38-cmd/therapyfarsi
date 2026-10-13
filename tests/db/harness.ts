@@ -117,8 +117,8 @@ export async function bookAndPay(
 /** Simulate time passing: the session started `hoursAgo` hours ago (50 min session, 10 min buffer). */
 export async function moveToPast(db: PGlite, bookingId: string, hoursAgo: number): Promise<void> {
   await db.query(
-    `update bookings set starts_at = now() - make_interval(secs => $2 * 3600),
-       ends_at = now() - make_interval(secs => $2 * 3600) + interval '50 min',
-       blocked_until = now() - make_interval(secs => $2 * 3600) + interval '60 min'
+    `update bookings set starts_at = now() - make_interval(secs => $2::float8 * 3600),
+       ends_at = now() - make_interval(secs => $2::float8 * 3600) + interval '50 min',
+       blocked_until = now() - make_interval(secs => $2::float8 * 3600) + interval '60 min'
      where id = $1`, [bookingId, hoursAgo]);
 }
