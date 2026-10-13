@@ -160,11 +160,13 @@ create table public.bookings (
     where (booking_status in ('held', 'confirmed'))
 );
 create index bookings_client_idx on public.bookings (client_id);
+create unique index bookings_one_hold_per_client on public.bookings (client_id) where booking_status = 'held';
 create index bookings_doctor_starts_idx on public.bookings (doctor_id, starts_at);
 
 create table public.payments (
   id uuid primary key default gen_random_uuid(),
-  booking_id uuid not null unique references public.bookings (id),
+  booking_id uuid not null references public.bookings (id),
+  is_duplicate boolean not null default false, -- a second real charge for an already-paid booking
   stripe_checkout_session_id text unique,
   stripe_payment_intent_id text unique,
   amount_cents int not null check (amount_cents >= 0),
@@ -175,6 +177,7 @@ create table public.payments (
   status public.payment_status not null default 'pending',
   created_at timestamptz not null default now()
 );
+create unique index payments_one_per_booking on public.payments (booking_id) where not is_duplicate;
 
 create table public.refunds (
   id uuid primary key default gen_random_uuid(),

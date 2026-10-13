@@ -103,8 +103,9 @@ begin
             coalesce((select risk_flag from intake_responses where client_id = v_client
                       order by created_at desc limit 1), false))
     returning id into v_id;
-  exception when exclusion_violation then
-    raise exception 'slot_taken';
+  exception
+    when exclusion_violation then raise exception 'slot_taken';
+    when unique_violation then raise exception 'hold_exists';
   end;
   return v_id;
 end $$;
@@ -130,7 +131,12 @@ begin
   end if;
   perform pg_advisory_xact_lock(hashtext(b.doctor_id::text));
 
-  if exists (select 1 from payments where booking_id = b.id) then
+  if exists (select 1 from payments where booking_id = b.id and not is_duplicate) then
+    insert into payments (booking_id, is_duplicate, stripe_checkout_session_id, stripe_payment_intent_id, amount_cents, currency, status)
+    values (b.id, true, p_checkout_session_id, p_payment_intent_id, p_amount_cents, lower(p_currency), 'refund_pending')
+    returning id into v_payment;
+    perform app_enqueue('refund', jsonb_build_object('payment_id', v_payment, 'amount_cents', p_amount_cents, 'reason', 'duplicate_charge'),
+                        'refund:' || v_payment);
     perform app_enqueue('admin_alert', jsonb_build_object('kind', 'duplicate_charge', 'booking_id', b.id, 'payment_intent', p_payment_intent_id),
                         'alert:duplicate_charge:' || p_payment_intent_id);
     update stripe_events set processed_at = now() where event_id = p_event_id;

@@ -79,8 +79,8 @@ describe('doctor', () => {
     expect(await count({ sub: doctor }, 'select id from doctor_ledger_entries')).toBe(1);
     expect(await count({ sub: otherDoctor }, 'select id from doctor_ledger_entries')).toBe(0);
   });
-  it('sees the profile of own client only', async () => {
-    expect(await count({ sub: doctor }, 'select id from profiles where id = $1', [client])).toBe(1);
+  it('never reads client profiles directly (first name comes from doctor_bookings)', async () => {
+    expect(await count({ sub: doctor }, 'select id from profiles where id = $1', [client])).toBe(0);
     expect(await count({ sub: doctor }, 'select id from profiles where id = $1', [otherClient])).toBe(0);
   });
   it('manages own availability but not another doctor’s', async () => {

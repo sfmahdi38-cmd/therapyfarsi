@@ -44,8 +44,6 @@ create policy policy_versions_admin on public.policy_versions for insert to auth
 -- profiles
 create policy profiles_self_read on public.profiles for select to authenticated using (id = auth.uid());
 create policy profiles_self_update on public.profiles for update to authenticated using (id = auth.uid()) with check (id = auth.uid());
-create policy profiles_doctor_clients on public.profiles for select to authenticated
-  using (exists (select 1 from bookings b where b.client_id = profiles.id and b.doctor_id = auth.uid()));
 create policy profiles_admin on public.profiles for all to authenticated using (app_is_admin()) with check (app_is_admin());
 
 -- roles: read own; only admin writes
@@ -71,9 +69,9 @@ create policy time_off_admin on public.time_off for all to authenticated using (
 
 -- intake & consent
 create policy intake_client_own on public.intake_responses for select to authenticated using (client_id = auth.uid());
-create policy intake_client_insert on public.intake_responses for insert to authenticated with check (client_id = auth.uid());
 create policy intake_doctor_read on public.intake_responses for select to authenticated
-  using (exists (select 1 from bookings b where b.client_id = intake_responses.client_id and b.doctor_id = auth.uid()));
+  using (exists (select 1 from bookings b where b.client_id = intake_responses.client_id and b.doctor_id = auth.uid()
+                 and b.booking_status = 'confirmed'));
 create policy intake_admin_read on public.intake_responses for select to authenticated using (app_is_admin());
 create policy consents_own on public.consents for select to authenticated using (profile_id = auth.uid());
 create policy consents_own_insert on public.consents for insert to authenticated with check (profile_id = auth.uid());
@@ -124,11 +122,20 @@ create policy stripe_events_admin_read on public.stripe_events for select to aut
 create policy jobs_admin_read on public.jobs for select to authenticated using (app_is_admin());
 create policy audit_admin_read on public.audit_log for select to authenticated using (app_is_admin());
 
--- doctor's view of own bookings (no money columns)
+-- First name of a client, only for a doctor who has a confirmed booking with them.
+create function public.app_client_first_name(p_client uuid) returns text
+language sql stable security definer set search_path = public as $$
+  select split_part(coalesce(p.full_name, ''), ' ', 1)
+  from profiles p
+  where p.id = p_client
+    and exists (select 1 from bookings b where b.client_id = p_client and b.doctor_id = auth.uid()
+                and b.booking_status = 'confirmed')
+$$;
+
+-- doctor's view of own bookings (no money columns, no contact details)
 create view public.doctor_bookings with (security_invoker = true) as
 select b.id, b.doctor_id, b.client_id,
-       split_part(coalesce(p.full_name, ''), ' ', 1) as client_first_name,
+       app_client_first_name(b.client_id) as client_first_name,
        b.starts_at, b.ends_at, b.booking_status, b.session_status, b.risk_flagged
 from public.bookings b
-left join public.profiles p on p.id = b.client_id
 where b.doctor_id = auth.uid();

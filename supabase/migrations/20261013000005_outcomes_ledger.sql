@@ -15,6 +15,7 @@ begin
   from doctor_ledger_entries where source_key like 'booking:' || b.id || ':outcome:%';
   v_delta := v_target - v_current;
   if v_delta = 0 then return; end if;
+  if v_delta > 0 and p_actor is null and app_payment_disputed(b.id) then return; end if;
   insert into doctor_ledger_entries (doctor_id, booking_id, type, amount_cents, source_key, created_by)
   values (b.doctor_id, b.id,
           (case when v_delta < 0 then 'reversal'
@@ -51,7 +52,10 @@ begin
   if exists (select 1 from issues where booking_id = b.id and type = 'dispute' and resolved_at is null) then
     return 'under_review';
   end if;
-  update bookings set session_status = p_status, overlap_seconds = p_overlap_seconds where id = b.id;
+  if b.refund_choice is not null then return 'choice_made'; end if;
+  update bookings set session_status = p_status, overlap_seconds = p_overlap_seconds,
+    choice_deadline = case when p_status in ('partial', 'no_show_doctor') then choice_deadline end
+  where id = b.id;
   if p_status in ('partial', 'no_show_doctor') then perform app_open_client_choice(b.id); end if;
   perform app_sync_outcome_earning(b.id, null);
   return 'recorded';
@@ -65,7 +69,12 @@ begin
   select * into b from bookings where id = p_booking for update;
   if not found then raise exception 'not_found'; end if;
   if b.booking_status <> 'confirmed' then raise exception 'not_confirmed'; end if;
-  update bookings set session_status = p_status, outcome_decided_by = auth.uid(), outcome_decided_at = now()
+  if b.refund_choice is not null and p_status in ('completed', 'no_show_client') then
+    raise exception 'choice_already_made';
+  end if;
+  update bookings set session_status = p_status, outcome_decided_by = auth.uid(), outcome_decided_at = now(),
+    choice_deadline = case when p_status in ('partial', 'no_show_doctor') or b.refund_choice is not null
+                           then choice_deadline end
   where id = b.id;
   update issues set resolved_at = now(), resolution = p_note
   where booking_id = b.id and type = 'dispute' and resolved_at is null;

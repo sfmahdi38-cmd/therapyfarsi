@@ -1,3 +1,9 @@
+create function public.app_payment_disputed(p_booking uuid) returns boolean
+language sql stable security definer set search_path = public as $$
+  select exists (select 1 from payments p join bookings b on p.booking_id = coalesce(b.root_booking_id, b.id)
+                 where b.id = p_booking and not p.is_duplicate and p.status = 'disputed')
+$$;
+
 create function public.app_request_refund(p_booking uuid) returns void
 language plpgsql security definer set search_path = public as $$
 declare
@@ -5,8 +11,13 @@ declare
   v_root uuid;
 begin
   select coalesce(root_booking_id, id) into v_root from bookings where id = p_booking;
-  select * into p from payments where booking_id = v_root for update;
+  select * into p from payments where booking_id = v_root and not is_duplicate for update;
   if not found or p.amount_cents - p.refunded_cents <= 0 then return; end if;
+  if p.status = 'disputed' then
+    perform app_enqueue('admin_alert', jsonb_build_object('kind', 'refund_blocked_dispute', 'booking_id', p_booking),
+                        'alert:refund_blocked_dispute:' || p_booking);
+    return;
+  end if;
   update payments set status = 'refund_pending' where id = p.id;
   perform app_enqueue('refund',
     jsonb_build_object('payment_id', p.id, 'amount_cents', p.amount_cents - p.refunded_cents, 'reason', 'booking:' || p_booking),
@@ -63,7 +74,7 @@ begin
   if v_refund = 'full' then
     perform app_request_refund(b.id);
   elsif v_refund = 'none' then
-    if b.doctor_share_cents > 0 then
+    if b.doctor_share_cents > 0 and not app_payment_disputed(b.id) then
       insert into doctor_ledger_entries (doctor_id, booking_id, type, amount_cents, source_key, created_by)
       values (b.doctor_id, b.id, 'late_cancel_earning', b.doctor_share_cents, 'booking:' || b.id || ':late_cancel', v_uid)
       on conflict (source_key) do nothing;
@@ -92,7 +103,9 @@ language plpgsql security definer set search_path = public as $$
 declare b bookings;
 begin
   select * into b from bookings where id = p_booking for update;
-  if not found or b.refund_choice is not null or b.choice_deadline is null or b.choice_deadline > now() then
+  if not found or b.refund_choice is not null or b.choice_deadline is null or b.choice_deadline > now()
+     or not ((b.booking_status = 'cancelled' and b.cancelled_by is distinct from b.client_id)
+             or b.session_status in ('partial', 'no_show_doctor')) then
     return 'not_due';
   end if;
   update bookings set refund_choice = 'refund' where id = b.id;
@@ -100,7 +113,8 @@ begin
   return 'refunded';
 end $$;
 
-create function public.reschedule_booking(p_booking uuid, p_new_starts_at timestamptz)
+create function public.reschedule_booking(p_booking uuid, p_new_starts_at timestamptz,
+                                          p_nonrefundable_ack boolean default false)
 returns uuid language plpgsql security definer set search_path = public as $$
 declare
   b bookings;
@@ -125,6 +139,10 @@ begin
 
   select * into v_slot from app_check_slot(b.doctor_id, p_new_starts_at,
     case when v_free then app_setting_int('free_reschedule_min_lead_hours') else app_setting_int('min_lead_hours') end);
+  if p_new_starts_at < now() + make_interval(hours => app_setting_int('refund_window_hours'))
+     and not coalesce(p_nonrefundable_ack, false) then
+    raise exception 'nonrefundable_ack_required';
+  end if;
 
   if v_free then
     update bookings set refund_choice = 'reschedule' where id = b.id;
@@ -138,10 +156,10 @@ begin
   begin
     insert into bookings (client_id, doctor_id, starts_at, ends_at, blocked_until, booking_status, policy_version_id,
                           price_cents, doctor_share_cents, share_rule, client_timezone, risk_flagged,
-                          root_booking_id, previous_booking_id)
+                          root_booking_id, previous_booking_id, nonrefundable_ack_at)
     values (b.client_id, b.doctor_id, p_new_starts_at, v_slot.o_ends_at, v_slot.o_blocked_until, 'confirmed',
             b.policy_version_id, b.price_cents, b.doctor_share_cents, b.share_rule, b.client_timezone, b.risk_flagged,
-            coalesce(b.root_booking_id, b.id), b.id)
+            coalesce(b.root_booking_id, b.id), b.id, case when p_nonrefundable_ack then now() end)
     returning id into v_new;
   exception when exclusion_violation then
     raise exception 'slot_taken';
@@ -154,11 +172,12 @@ begin
 end $$;
 
 revoke execute on function public.app_request_refund(uuid) from public, anon, authenticated;
+revoke execute on function public.app_payment_disputed(uuid) from public, anon, authenticated;
 revoke execute on function public.cancel_booking(uuid, text) from public, anon;
 grant execute on function public.cancel_booking(uuid, text) to authenticated;
 revoke execute on function public.choose_refund(uuid) from public, anon;
 grant execute on function public.choose_refund(uuid) to authenticated;
-revoke execute on function public.reschedule_booking(uuid, timestamptz) from public, anon;
-grant execute on function public.reschedule_booking(uuid, timestamptz) to authenticated;
+revoke execute on function public.reschedule_booking(uuid, timestamptz, boolean) from public, anon;
+grant execute on function public.reschedule_booking(uuid, timestamptz, boolean) to authenticated;
 revoke execute on function public.resolve_choice_deadline(uuid) from public, anon, authenticated;
 grant execute on function public.resolve_choice_deadline(uuid) to service_role;
