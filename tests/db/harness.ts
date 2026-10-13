@@ -89,3 +89,36 @@ export function gridSlotAfter(hoursFromNow: number): Date {
   if (h >= 24) { h = 8; day += 1; } else if (h < 8) h = 8;
   return new Date(new TZDate(z.getFullYear(), z.getMonth(), day, h, 0, TEHRAN).getTime());
 }
+
+export async function holdAs(db: PGlite, client: string, doctor: string, startsAt: Date, ack = false): Promise<string> {
+  return rpc<string>(db, { sub: client }, 'select hold_slot($1, $2, $3, $4) as r', [doctor, startsAt, 'Europe/London', ack]);
+}
+
+let eventCounter = 0;
+export async function confirm(db: PGlite, bookingId: string, amountCents = 5000): Promise<string> {
+  const n = ++eventCounter;
+  return rpc<string>(db, 'service', 'select confirm_payment($1, $2, $3, $4, $5, $6) as r',
+    [`evt_${n}`, bookingId, amountCents, 'usd', `cs_${n}`, `pi_${n}`]);
+}
+
+export async function bookAndPay(
+  db: PGlite,
+  opts: { clientId?: string; doctorId?: string; startsAt?: Date; ack?: boolean } = {},
+): Promise<{ bookingId: string; clientId: string; doctorId: string; startsAt: Date }> {
+  const doctorId = opts.doctorId ?? await createDoctor(db);
+  const clientId = opts.clientId ?? await createUser(db);
+  const startsAt = opts.startsAt ?? tehranAt(3, 21);
+  const bookingId = await holdAs(db, clientId, doctorId, startsAt, opts.ack ?? false);
+  const result = await confirm(db, bookingId);
+  if (result !== 'confirmed') throw new Error(`bookAndPay: ${result}`);
+  return { bookingId, clientId, doctorId, startsAt };
+}
+
+/** Simulate time passing: the session started `hoursAgo` hours ago (50 min session, 10 min buffer). */
+export async function moveToPast(db: PGlite, bookingId: string, hoursAgo: number): Promise<void> {
+  await db.query(
+    `update bookings set starts_at = now() - make_interval(secs => $2 * 3600),
+       ends_at = now() - make_interval(secs => $2 * 3600) + interval '50 min',
+       blocked_until = now() - make_interval(secs => $2 * 3600) + interval '60 min'
+     where id = $1`, [bookingId, hoursAgo]);
+}
