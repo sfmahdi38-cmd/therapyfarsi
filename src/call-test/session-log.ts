@@ -2,7 +2,7 @@ import type { CallEvent } from './report';
 
 // The event log lives in this tab's sessionStorage (never on the server), so a reload
 // or a rejoin of the same room keeps the evidence of the drop that caused it.
-export const SESSION_KEY = 'tropifarsi.callTest.session';
+export const SESSION_KEY = 'therapyfarsi.callTest.session';
 
 export interface StoredSession { provider: string; room: string; events: CallEvent[] }
 

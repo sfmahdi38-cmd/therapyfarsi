@@ -125,7 +125,7 @@ export function formatReport(meta: ReportMeta, events: readonly CallEvent[], end
   const s = summarizeCall(events, endAt);
   const started = s.startedAt === null ? '—' : format(new TZDate(s.startedAt, 'Asia/Tehran'), 'yyyy-MM-dd HH:mm');
   return [
-    'TropiFarsi call test',
+    'TherapyFarsi call test',
     `provider: ${meta.provider}`,
     `room: ${meta.room}`,
     `tester: ${meta.tester}`,

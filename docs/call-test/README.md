@@ -13,14 +13,14 @@
 3. در **Settings → Variables and Secrets** این‌ها را به‌صورت Secret بگذارید:
    `CALL_TEST_CODE`، `DAILY_API_KEY`، `DAILY_DOMAIN`، `LIVEKIT_URL`، `LIVEKIT_API_KEY`، `LIVEKIT_API_SECRET`.
    `CALL_TEST_CODE` یک رشتهٔ تصادفی بلند است و فقط به تست‌کننده‌ها داده می‌شود.
-4. دامنه: فایل `wrangler.jsonc` ورکر را روی `tropifarsi.com` می‌گذارد. اگر Cloudflare گفت رکورد DNS از قبل هست، رکورد قبلیِ `tropifarsi.com` را (فقط اگر چیزی رویش نیست) پاک کنید و دوباره deploy کنید.
+4. دامنه: فایل `wrangler.jsonc` ورکر را روی `therapyfarsi.com` می‌گذارد. اگر Cloudflare گفت رکورد DNS از قبل هست، رکورد قبلیِ `therapyfarsi.com` را (فقط اگر چیزی رویش نیست) پاک کنید و دوباره deploy کنید.
    آدرس `*.workers.dev` را برای تست از ایران استفاده نکنید؛ ممکن است فیلتر باشد.
 5. **Security → Bots:** حالت Bot Fight Mode و Under Attack خاموش باشد، تا دکتر داخل ایران پشت چالش Cloudflare گیر نکند.
 6. داشبورد Daily: ضبط (recording) روی دامنه خاموش باشد. LiveKit Cloud: Egress راه نیندازید.
 
 بررسی بعد از انتشار:
-- `https://tropifarsi.com/` باز شود و فارسی و راست‌به‌چپ باشد.
-- در `https://tropifarsi.com/call-test` با کد غلط پیام «کد دسترسی درست نیست» بیاید.
+- `https://therapyfarsi.com/` باز شود و فارسی و راست‌به‌چپ باشد.
+- در `https://therapyfarsi.com/call-test` با کد غلط پیام «کد دسترسی درست نیست» بیاید.
 - با کد درست، دو تب، یک اتاق: تماس وصل شود.
 
 ## ۲. برنامهٔ تست
