@@ -20,6 +20,10 @@ function Read-Secret([string]$label) {
   return $plain
 }
 
+$domain = (Read-Host 'DAILY_DOMAIN (Enter = thropy.daily.co)').Trim()
+if (-not $domain) { $domain = 'thropy.daily.co' }
+if ($domain -notmatch '\.') { $domain = "$domain.daily.co" }   # "cloud-abc" -> "cloud-abc.daily.co"
+
 # Random access code for the /call-test page (24 URL-safe characters).
 $bytes = New-Object byte[] 18
 [System.Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($bytes)
@@ -27,13 +31,15 @@ $code = [Convert]::ToBase64String($bytes).Replace('+', '-').Replace('/', '_')
 
 $secrets = [ordered]@{
   CALL_TEST_CODE     = $code
-  DAILY_DOMAIN       = 'thropy.daily.co'
+  DAILY_DOMAIN       = $domain
   DAILY_API_KEY      = Read-Secret 'DAILY_API_KEY  (dashboard.daily.co > Developers)'
   LIVEKIT_URL        = Read-Secret 'LIVEKIT_URL  (cloud.livekit.io > Settings, starts with wss://)'
   LIVEKIT_API_KEY    = Read-Secret 'LIVEKIT_API_KEY  (cloud.livekit.io > Settings > API keys)'
   LIVEKIT_API_SECRET = Read-Secret 'LIVEKIT_API_SECRET  (same place)'
 }
-if (-not $secrets.LIVEKIT_URL.StartsWith('wss://')) { throw 'LIVEKIT_URL must start with wss://' }
+if (-not $secrets.LIVEKIT_URL.StartsWith('wss://')) {
+  throw 'LIVEKIT_URL must start with wss:// (not the sip: address). LiveKit Cloud > Settings > Project URL.'
+}
 
 # One upload for all six; the temp file is deleted right after.
 $tmp = Join-Path $env:TEMP ("tf-secrets-" + [guid]::NewGuid() + '.json')
