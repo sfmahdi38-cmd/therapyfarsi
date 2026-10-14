@@ -6,3 +6,6 @@ node_modules
 !.env.example
 coverage
 .superpowers
+next-env.d.ts
+*.tsbuildinfo
+.dev.vars*
