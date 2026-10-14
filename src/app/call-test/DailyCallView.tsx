@@ -2,9 +2,10 @@
 
 import { useEffect, useRef } from 'react';
 import type { DailyCall } from '@daily-co/daily-js';
+import { ConnectionTracker } from '@/call-test/connection-tracker';
 import type { CallViewProps } from './call-view';
 
-export function DailyCallView({ url, token, onEvent, onLeave }: CallViewProps) {
+export function DailyCallView({ url, token, forceRelay, onEvent, onLeave }: CallViewProps) {
   const box = useRef<HTMLDivElement>(null);
   const cb = useRef({ onEvent, onLeave });
   useEffect(() => { cb.current = { onEvent, onLeave }; });
@@ -15,6 +16,7 @@ export function DailyCallView({ url, token, onEvent, onLeave }: CallViewProps) {
     const emit: CallViewProps['onEvent'] = (kind, detail) => cb.current.onEvent(kind, detail);
     let quality: 'quality_ok' | 'quality_low' | null = null;
     let cameraOff = false;
+    const links = new ConnectionTracker();
 
     void (async () => {
       const Daily = (await import('@daily-co/daily-js')).default;
@@ -23,15 +25,21 @@ export function DailyCallView({ url, token, onEvent, onLeave }: CallViewProps) {
         iframeStyle: { width: '100%', height: '100%', border: '0' },
         showLeaveButton: true,
         allowMultipleCallInstances: true,
+        ...(forceRelay ? { dailyConfig: { iceConfig: { iceTransportPolicy: 'relay' as const } } } : {}),
       });
       call
         .on('joined-meeting', () => emit('joined'))
         .on('left-meeting', () => { emit('left'); cb.current.onLeave(); })
         .on('participant-joined', () => emit('peer_joined'))
-        .on('participant-left', () => emit('peer_left'))
+        .on('participant-left', () => {
+          emit('peer_left');
+          // A peer-to-peer link the departed peer took down is not our outage.
+          if (links.clear('peer-to-peer')) emit('reconnected', 'peer-to-peer');
+        })
         .on('network-connection', (e) => {
-          if (e?.event === 'interrupted') emit('reconnecting', e.type);
-          else if (e?.event === 'connected') emit('reconnected', e.type);
+          if (!e) return;
+          const change = links.update(e.type, e.event);
+          if (change) emit(change, e.type);
         })
         .on('network-quality-change', (e) => {
           // Newer daily-js reports networkState; older versions report threshold.
@@ -48,7 +56,12 @@ export function DailyCallView({ url, token, onEvent, onLeave }: CallViewProps) {
           const off = state === 'off';
           if (off !== cameraOff) { cameraOff = off; emit(off ? 'camera_off' : 'camera_on'); }
         })
-        .on('error', (e) => emit('error', e?.errorMsg));
+        .on('error', (e) => {
+          // Daily's 'error' is fatal and is not followed by left-meeting: end the call here.
+          emit('error', e?.errorMsg);
+          emit('left', 'fatal_error');
+          cb.current.onLeave();
+        });
       await call.join({ url, token });
     })().catch((err: unknown) => emit('error', String(err)));
 
@@ -56,7 +69,7 @@ export function DailyCallView({ url, token, onEvent, onLeave }: CallViewProps) {
       cancelled = true;
       void call?.destroy();
     };
-  }, [url, token]);
+  }, [url, token, forceRelay]);
 
   return <div ref={box} className="call-frame" />;
 }

@@ -113,6 +113,7 @@ export interface ReportMeta {
   tester: string;
   network: NetworkKind;
   device: DeviceKind;
+  relay: 'forced' | 'auto';
   audioRating: number | null;
   videoRating: number | null;
   notes: string;
@@ -130,6 +131,7 @@ export function formatReport(meta: ReportMeta, events: readonly CallEvent[], end
     `tester: ${meta.tester}`,
     `network: ${meta.network}`,
     `device: ${meta.device}`,
+    `relay (TURN 443): ${meta.relay}`,
     `started (Tehran): ${started}`,
     `duration: ${formatDuration(s.durationMs)}`,
     `own outages: ${s.outages} (total ${formatDuration(s.totalOutageMs)}, longest ${formatDuration(s.longestOutageMs)})`,

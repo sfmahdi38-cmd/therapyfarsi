@@ -1,6 +1,12 @@
 {
-  "meta": { "title": "TropiFarsi", "description": "Online counselling and psychotherapy in Persian" },
-  "home": { "brand": "TropiFarsi", "soon": "Coming soon. The site is being built." },
+  "meta": {
+    "title": "TropiFarsi",
+    "description": "Online counselling and psychotherapy in Persian"
+  },
+  "home": {
+    "brand": "TropiFarsi",
+    "soon": "Coming soon. The site is being built."
+  },
   "callTest": {
     "title": "Call test",
     "intro": "This is a temporary page for measuring call quality from Iran. Calls are not recorded and nothing is stored on the server.",
@@ -17,10 +23,12 @@
     "device": "Device",
     "deviceLaptop": "Laptop",
     "devicePhone": "Phone",
+    "forceRelay": "Force TURN over port 443 (tests networks that block UDP)",
     "join": "Join call",
     "joining": "Getting ready…",
     "inCall": "In call: {provider} / {room}",
     "leaveHint": "To end the call, press the leave button inside the call. The report is built after that.",
+    "endCall": "End call and show report",
     "log": "Events",
     "reportTitle": "Report for this call",
     "reportHint": "Rate the call, copy the report and send it to the site owner.",

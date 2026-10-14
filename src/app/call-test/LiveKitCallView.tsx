@@ -9,7 +9,7 @@ import {
 } from 'livekit-client';
 import type { CallViewProps } from './call-view';
 
-export function LiveKitCallView({ url, token, displayName, onEvent, onLeave }: CallViewProps) {
+export function LiveKitCallView({ url, token, displayName, forceRelay, onEvent, onLeave }: CallViewProps) {
   const [room] = useState(() => new Room({ adaptiveStream: true, dynacast: true }));
   const [choices, setChoices] = useState<LocalUserChoices | null>(null);
   const cb = useRef({ onEvent, onLeave });
@@ -85,6 +85,7 @@ export function LiveKitCallView({ url, token, displayName, onEvent, onLeave }: C
       serverUrl={url}
       token={token}
       connect
+      connectOptions={forceRelay ? { rtcConfig: { iceTransportPolicy: 'relay' } } : undefined}
       video={choices.videoEnabled ? { deviceId: choices.videoDeviceId } : false}
       audio={choices.audioEnabled ? { deviceId: choices.audioDeviceId } : false}
       data-lk-theme="default"

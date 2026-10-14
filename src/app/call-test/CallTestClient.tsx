@@ -1,10 +1,11 @@
 'use client';
 
-import { useCallback, useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import dynamic from 'next/dynamic';
 import { useTranslations } from 'next-intl';
 import { VIDEO_PROVIDERS, type JoinInfo, type VideoProvider } from '@/video/types';
 import type { CallEvent, CallEventKind, DeviceKind, NetworkKind } from '@/call-test/report';
+import { continueLog, loadSession, saveSession } from '@/call-test/session-log';
 import { ReportPanel } from './ReportPanel';
 
 const DailyCallView = dynamic(() => import('./DailyCallView').then((m) => m.DailyCallView), { ssr: false });
@@ -30,6 +31,15 @@ interface FormState {
   name: string;
   network: NetworkKind;
   device: DeviceKind;
+  forceRelay: boolean;
+}
+
+function tabStorage(): Storage | null {
+  try {
+    return typeof window === 'undefined' ? null : window.sessionStorage;
+  } catch {
+    return null;
+  }
 }
 
 const errorKey = (e: unknown): string => ((KNOWN_ERRORS as readonly unknown[]).includes(e) ? (e as string) : 'unknown');
@@ -37,7 +47,7 @@ const errorKey = (e: unknown): string => ((KNOWN_ERRORS as readonly unknown[]).i
 export function CallTestClient() {
   const t = useTranslations('callTest');
   const [stage, setStage] = useState<Stage>({ kind: 'form' });
-  const [form, setForm] = useState<FormState>({ code: '', provider: 'daily', room: '', name: '', network: 'home', device: 'laptop' });
+  const [form, setForm] = useState<FormState>({ code: '', provider: 'daily', room: '', name: '', network: 'home', device: 'laptop', forceRelay: false });
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [events, setEvents] = useState<CallEvent[]>([]);
@@ -48,6 +58,24 @@ export function CallTestClient() {
   const onLeave = useCallback(() => {
     setStage((s) => (s.kind === 'call' ? { kind: 'report', join: s.join, endedAt: Date.now() } : s));
   }, []);
+
+  // Keep this tab's log across reloads and rejoins, so a drop that forced one still shows in the report.
+  useEffect(() => {
+    if (stage.kind === 'form') return;
+    saveSession(tabStorage(), { provider: stage.join.provider, room: form.room, events });
+  }, [stage, events, form.room]);
+
+  useEffect(() => {
+    if (stage.kind !== 'call') return;
+    const warn = (e: BeforeUnloadEvent) => e.preventDefault();
+    window.addEventListener('beforeunload', warn);
+    return () => window.removeEventListener('beforeunload', warn);
+  }, [stage.kind]);
+
+  const endCall = () => {
+    onEvent('left', 'ended_on_page');
+    onLeave();
+  };
 
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) => setForm((f) => ({ ...f, [key]: value }));
 
@@ -68,7 +96,7 @@ export function CallTestClient() {
         setError(errorKey('error' in body ? body.error : undefined));
         return;
       }
-      setEvents([]);
+      setEvents(continueLog(loadSession(tabStorage()), body.provider, room));
       setStage({ kind: 'call', join: body });
     } catch {
       setError('network');
@@ -81,7 +109,7 @@ export function CallTestClient() {
     return (
       <main className="page">
         <ReportPanel
-          base={{ provider: stage.join.provider, room: form.room, tester: form.name.trim(), network: form.network, device: form.device }}
+          base={{ provider: stage.join.provider, room: form.room, tester: form.name.trim(), network: form.network, device: form.device, relay: form.forceRelay ? 'forced' : 'auto' }}
           events={events}
           endedAt={stage.endedAt}
           onAgain={() => setStage({ kind: 'form' })}
@@ -96,9 +124,12 @@ export function CallTestClient() {
       <main className="page">
         <p className="muted">{t('inCall', { provider: PROVIDER_LABEL[stage.join.provider], room: form.room })}</p>
         <div dir="ltr">
-          <View url={stage.join.url} token={stage.join.token} displayName={form.name.trim()} onEvent={onEvent} onLeave={onLeave} />
+          <View url={stage.join.url} token={stage.join.token} displayName={form.name.trim()} forceRelay={form.forceRelay} onEvent={onEvent} onLeave={onLeave} />
         </div>
-        <p className="hint">{t('leaveHint')}</p>
+        <div className="row">
+          <p className="hint">{t('leaveHint')}</p>
+          <button type="button" className="btn btn-quiet" onClick={endCall}>{t('endCall')}</button>
+        </div>
         <h2>{t('log')}</h2>
         <ol className="log">
           {events.slice(-10).map((e, i) => (
@@ -147,6 +178,10 @@ export function CallTestClient() {
             <option value="laptop">{t('deviceLaptop')}</option>
             <option value="phone">{t('devicePhone')}</option>
           </select>
+        </label>
+        <label className="row">
+          <input type="checkbox" checked={form.forceRelay} onChange={(e) => set('forceRelay', e.target.checked)} />
+          <span>{t('forceRelay')}</span>
         </label>
         {error && <p className="error" role="alert">{t(`errors.${error}`)}</p>}
         <button type="submit" className="btn" disabled={busy}>{busy ? t('joining') : t('join')}</button>

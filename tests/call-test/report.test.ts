@@ -95,12 +95,13 @@ describe('formatDuration', () => {
 describe('formatReport', () => {
   it('plain text with Tehran start time, ratings and result', () => {
     const text = formatReport(
-      { provider: 'daily', room: 'tehran-1', tester: 'دکتر الف', network: 'mci', device: 'phone', audioRating: 4, videoRating: null, notes: 'خوب بود' },
+      { provider: 'daily', room: 'tehran-1', tester: 'دکتر الف', network: 'mci', device: 'phone', relay: 'forced', audioRating: 4, videoRating: null, notes: 'خوب بود' },
       [ev(0, 'joined'), ev(m(1), 'peer_joined'), ev(m(50), 'peer_left'), ev(m(50) + s(10), 'left')],
       t0 + m(60),
     );
     expect(text).toContain('provider: daily');
     expect(text).toContain('network: mci');
+    expect(text).toContain('relay (TURN 443): forced');
     expect(text).toContain('started (Tehran): 2026-10-14 21:03');
     expect(text).toContain('duration: 50m 10s');
     expect(text).toContain('own outages: 0 (total 0m 0s, longest 0m 0s)');
