@@ -4,7 +4,9 @@
 
 ## ۱. راه‌اندازی (یک بار، توسط صاحب سایت)
 
-ساخت نهایی روی ویندوز کار نمی‌کند (باگ OpenNext روی ویندوز). ساخت و انتشار را Cloudflare روی لینوکس انجام می‌دهد:
+ساخت و انتشار را Cloudflare از روی GitHub انجام می‌دهد (هر push به `master` یک انتشار تازه است). نسخهٔ Next.js روی `16.3.8` قفل است؛ OpenNext با 16.4 کار نمی‌کند و Worker خطای 1101 می‌دهد. تست `tests/build/opennext-compat.test.ts` جلوی ارتقای اشتباه را می‌گیرد.
+
+تنظیم ساخت در Cloudflare (Settings → Build):
 
 1. یک مخزن **خصوصی** در GitHub بسازید و همین پروژه را push کنید.
 2. در داشبورد Cloudflare: **Workers & Pages → Create → Import a repository** و همین مخزن را انتخاب کنید.
