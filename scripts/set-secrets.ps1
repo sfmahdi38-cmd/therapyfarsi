@@ -1,6 +1,8 @@
 # Puts the call-test keys on the "therapyfarsi" Cloudflare Worker.
 # Run it yourself:  powershell -ExecutionPolicy Bypass -File scripts\set-secrets.ps1
 # Keys go straight from this window to Cloudflare. Nothing is saved in the project.
+# -Name <worker> targets a Worker whose name differs from wrangler.jsonc.
+param([string]$Name)
 $ErrorActionPreference = 'Stop'
 Set-Location (Join-Path $PSScriptRoot '..')
 
@@ -45,7 +47,7 @@ if (-not $secrets.LIVEKIT_URL.StartsWith('wss://')) {
 $tmp = Join-Path $env:TEMP ("tf-secrets-" + [guid]::NewGuid() + '.json')
 try {
   [System.IO.File]::WriteAllText($tmp, ($secrets | ConvertTo-Json), (New-Object System.Text.UTF8Encoding $false))
-  npx wrangler secret bulk $tmp
+  if ($Name) { npx wrangler secret bulk $tmp --name $Name } else { npx wrangler secret bulk $tmp }
   if ($LASTEXITCODE -ne 0) { throw 'wrangler secret bulk failed' }
 } finally {
   Remove-Item $tmp -Force -ErrorAction SilentlyContinue
