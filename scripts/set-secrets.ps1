@@ -1,4 +1,4 @@
-# Puts the call-test keys on the "therapyfarsi" Cloudflare Worker.
+# Puts the call-test keys on the "therapyfarsi1" Cloudflare Worker (name from wrangler.jsonc).
 # Run it yourself:  powershell -ExecutionPolicy Bypass -File scripts\set-secrets.ps1
 # Keys go straight from this window to Cloudflare. Nothing is saved in the project.
 # -Name <worker> targets a Worker whose name differs from wrangler.jsonc.

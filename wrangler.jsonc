@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "therapyfarsi",
+  "name": "therapyfarsi1",
   "account_id": "80245fc9347b5e12ea0e6cf9e3e3b163",
   "main": ".open-next/worker.js",
   "compatibility_date": "2026-10-01",
