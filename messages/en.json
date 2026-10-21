@@ -1,11 +1,109 @@
 {
   "meta": {
-    "title": "TherapyFarsi",
-    "description": "Online counselling and psychotherapy in Persian"
+    "title": "TherapyFarsi | Online counselling and therapy in Persian across Europe",
+    "description": "Online counselling and psychotherapy in Persian for Iranians and Persian speakers living in Europe and the UK, with experienced counsellors who know life as an immigrant."
   },
   "home": {
     "brand": "TherapyFarsi",
-    "soon": "Coming soon. The site is being built."
+    "soon": "Coming soon",
+    "navWhy": "Why Persian",
+    "navHow": "How it works",
+    "navFaq": "Questions",
+    "heroLine1": "Here, you don’t have to",
+    "heroLine2": "translate what you feel",
+    "heroLede": "Online counselling and psychotherapy in Persian for Iranians and Persian speakers living in Europe, with experienced counsellors who know your language, your culture and the hard parts of life as an immigrant.",
+    "heroStatus": "The first sessions open soon. We are finishing the last steps so everything works from day one.",
+    "ctaHow": "See how it works",
+    "ctaFaq": "Common questions",
+    "archLabel": "A window shaped like a Persian arch, looking out on a European city at dusk",
+    "whyTitle": "Why in Persian?",
+    "why": [
+      {
+        "title": "The language of feelings",
+        "text": "Some things only come out right in your mother tongue. Here you don’t search for words or cut your story short."
+      },
+      {
+        "title": "Someone who gets migration",
+        "text": "Our counsellors know life in Europe: residence and work, family far away, a new language, and the feeling of standing between two places."
+      },
+      {
+        "title": "On your evening",
+        "text": "Times are shown in your local time and sessions are online, from your own home, after work."
+      }
+    ],
+    "topicsTitle": "What can we talk about?",
+    "topics": [
+      "Homesickness and migration grief",
+      "Loneliness",
+      "Anxiety and worry",
+      "Low mood and depression",
+      "Relationships and family",
+      "Work, study and visa pressure",
+      "Between two cultures",
+      "Sleep"
+    ],
+    "topicsNote": "If your topic isn’t on this list, that’s fine. Start from where you are.",
+    "howTitle": "How it works",
+    "steps": [
+      {
+        "title": "Choose your counsellor",
+        "text": "Answer a few short questions to see counsellors who work with your topic, or browse the list yourself."
+      },
+      {
+        "title": "Book a time",
+        "text": "Times are in your local time. You pay by international card and the receipt arrives by email."
+      },
+      {
+        "title": "Talk from home",
+        "text": "The video session runs right here on the site. If your connection gets weak, carry on with audio only."
+      }
+    ],
+    "trustTitle": "What you can count on",
+    "trust": [
+      {
+        "title": "Sessions are not recorded",
+        "text": "Each session link opens only for you and your counsellor, and no audio or video is stored."
+      },
+      {
+        "title": "What you say stays with us",
+        "text": "Only the counsellor of that session sees your answers. Emails and messages never contain what you shared."
+      },
+      {
+        "title": "A clear cancellation policy",
+        "text": "Cancel up to 24 hours before a session for a full refund, or move it to another time."
+      }
+    ],
+    "emergencyStrong": "TherapyFarsi is not an emergency service.",
+    "emergencyText": "If you are in immediate danger, call the emergency number of the country you are in right now: 112 in Europe, 999 in the UK.",
+    "faqTitle": "Common questions",
+    "faq": [
+      {
+        "q": "When can I book my first session?",
+        "a": "Soon. We are testing the site with a few counsellors and first clients so booking, payment and sessions work smoothly from day one."
+      },
+      {
+        "q": "Who are the counsellors?",
+        "a": "Experienced Persian-speaking psychologists and counsellors who know life in Europe and the worries that come with migration. Each counsellor’s identity and professional credentials are checked before they join."
+      },
+      {
+        "q": "Which countries can I use it from?",
+        "a": "We focus on Iranians and Persian speakers living in Europe and the UK. Session times are shown in your local time."
+      },
+      {
+        "q": "Is medication prescribed?",
+        "a": "No. Sessions are talk-based: counselling and psychotherapy. If medication may help, your counsellor will help you see a doctor in the country where you live."
+      },
+      {
+        "q": "What if the internet drops during a session?",
+        "a": "You can carry on with audio only. If a session is cut short by a connection problem, you can move it for free or get your money back."
+      },
+      {
+        "q": "How do I pay?",
+        "a": "By international card, Apple Pay or Google Pay. The price of each session is shown before you book."
+      }
+    ],
+    "footerTagline": "Online counselling and psychotherapy in Persian",
+    "footerCopy": "© 2026 TherapyFarsi"
   },
   "callTest": {
     "title": "Call test",

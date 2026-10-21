@@ -18,6 +18,7 @@
     "@daily-co/daily-js": "^0.93.0",
     "@date-fns/tz": "^1.5.0",
     "@fontsource-variable/vazirmatn": "^5.3.0",
+    "@fontsource/noto-nastaliq-urdu": "5.3.0",
     "@livekit/components-react": "^2.9.24",
     "@livekit/components-styles": "^1.2.0",
     "@opennextjs/cloudflare": "^1.20.11",
