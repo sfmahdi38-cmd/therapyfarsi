@@ -1,0 +1,5 @@
+/* Tailwind is loaded only on the homepage, so the temporary call-test page keeps its own styles. */
+@import 'tailwindcss';
+
+body { background: #FAF7F2; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }

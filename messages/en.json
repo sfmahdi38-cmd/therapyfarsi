@@ -5,33 +5,49 @@
   },
   "home": {
     "brand": "TherapyFarsi",
+    "domainLabel": "TherapyFarsi.com",
+    "topBar": "Made for Persian speakers in Europe and the UK • Sessions are never recorded",
     "soon": "Coming soon",
-    "navWhy": "Why Persian",
+    "navWhy": "Why Persian?",
+    "navTopics": "Topics",
+    "navTeam": "Counsellors",
     "navHow": "How it works",
+    "navStory": "Our story",
     "navFaq": "Questions",
-    "heroLine1": "Here, you don’t have to",
-    "heroLine2": "translate what you feel",
-    "heroLede": "Online counselling and psychotherapy in Persian for Iranians and Persian speakers living in Europe, with experienced counsellors who know your language, your culture and the hard parts of life as an immigrant.",
-    "heroStatus": "The first sessions open soon. We are finishing the last steps so everything works from day one.",
+    "headerCta": "Notify me",
+    "heroBadge": "A safe space for therapy, for Iranians in Europe and the UK",
+    "heroBefore": "Here, you don’t have to translate",
+    "heroAccent": "what you feel",
+    "heroAfter": ".",
+    "heroLede": "Online counselling and psychotherapy in Persian for Iranians and Persian speakers living in Europe and the UK, with experienced counsellors who know your language, your culture and the hard parts of life as an immigrant.",
+    "ctaNotify": "Tell me when it opens",
     "ctaHow": "See how it works",
-    "ctaFaq": "Common questions",
-    "archLabel": "A window shaped like a Persian arch, looking out on a European city at dusk",
-    "whyTitle": "Why in Persian?",
-    "why": [
-      {
-        "title": "The language of feelings",
-        "text": "Some things only come out right in your mother tongue. Here you don’t search for words or cut your story short."
-      },
-      {
-        "title": "Someone who gets migration",
-        "text": "Our counsellors know life in Europe: residence and work, family far away, a new language, and the feeling of standing between two places."
-      },
-      {
-        "title": "On your evening",
-        "text": "Times are shown in your local time and sessions are online, from your own home, after work."
-      }
+    "heroTrust": [
+      "Counsellors’ credentials are checked",
+      "Times in European and UK time",
+      "No recording, full confidentiality"
     ],
-    "topicsTitle": "What can we talk about?",
+    "illusLabel": "A window looking out on a European city at dusk, with a cup of tea",
+    "cardQuote": "“From your own room in Europe, to the warmth of your mother tongue”",
+    "cardSub": "No need to explain your culture, taarof or homesickness",
+    "soonLabel": "First sessions",
+    "soonTitle": "Opening soon",
+    "soonText": "50 minutes • secure video call",
+    "soonCta": "Notify me",
+    "notifyPrefill": "Hi, I’d like to know when TherapyFarsi sessions start.",
+    "whyTitle": "Why in Persian?",
+    "whyLead": "Even if your English or German is excellent, your sorrows speak Persian.",
+    "whyIntro": "Many childhood memories and deep feelings live in our mother tongue.",
+    "whyQuote": "“When you feel low, tired or your head is full, the last thing you want is to hunt for the right word in English or German.”",
+    "whyBody": "Or to spend an hour explaining to a non-Iranian counsellor how an Iranian family works, what “taarof” means, and why, from this far away, your family’s worries still sit on your shoulders.",
+    "whyChips": [
+      "A shared understanding of Iranian culture and family",
+      "Say idioms, hints and feelings with ease",
+      "Knows visas, homesickness and migration"
+    ],
+    "topicsEyebrow": "What can we talk about?",
+    "topicsTitle": "Whatever is on your mind is heard here",
+    "topicsNote": "If your topic isn’t on this list, that’s fine. Start from where you are.",
     "topics": [
       {
         "title": "Homesickness and migration grief",
@@ -66,40 +82,59 @@
         "text": "A mind that won’t switch off at night, and tiredness that rest doesn’t fix."
       }
     ],
-    "topicsNote": "If your topic isn’t on this list, that’s fine. Start from where you are.",
-    "howTitle": "How it works",
+    "teamEyebrow": "The TherapyFarsi team",
+    "teamTitle": "Our counsellors will be introduced soon",
+    "teamText": "We are choosing counsellors carefully: credentials and licence, experience with immigrants, and an interview. Each counsellor will have their own page with their approach, location, price and an intro video.",
+    "teamRegions": [
+      "Counsellors living in Europe and the UK",
+      "Experienced counsellors in Iran"
+    ],
+    "joinTitle": "Are you a Persian-speaking psychologist or counsellor?",
+    "joinText": "If you work with immigrants and would like to join TherapyFarsi, send us a message on WhatsApp.",
+    "joinCta": "Work with us",
+    "joinPrefill": "Hi, I’m a psychologist/counsellor and I have a question about working with TherapyFarsi.",
+    "howEyebrow": "How it works",
+    "howTitle": "Start in 3 simple steps",
+    "howSub": "No paperwork and no long waiting lists",
     "steps": [
       {
         "title": "Choose your counsellor",
-        "text": "Answer a few short questions to see counsellors who work with your topic, or browse the list yourself."
+        "text": "Look at each counsellor’s background, intro video and way of working, and pick the one who fits your concern and personality."
       },
       {
-        "title": "Book a time",
-        "text": "Times are in your local time. You pay by international card and the receipt arrives by email."
+        "title": "Book in your own time zone",
+        "text": "Pick a free slot in your city’s time in Europe or the UK and pay online in euros or pounds."
       },
       {
-        "title": "Talk from home",
-        "text": "The video session runs right here on the site. If your connection gets weak, carry on with audio only."
+        "title": "Step into a safe room",
+        "text": "At the set time, join the 50-minute video session from home with your private link. If the connection gets weak, carry on with audio."
       }
     ],
-    "trustTitle": "What you can count on",
+    "storyEyebrow": "Our story",
+    "storyTitle": "Why we built TherapyFarsi",
+    "storyBody": [
+      "Migration isn’t only a change of map; sometimes it means losing a piece of yourself in a new country. TherapyFarsi started from that experience.",
+      "We know the Sunday-evening homesickness in Europe, being stuck between staying and going back, and how hard it is to say your deepest pain in a second language. We want a place where you can talk without censoring yourself, without fear of judgement, in your mother tongue, with someone who understands you."
+    ],
+    "safetyTitle": "Your safe space is our red line",
+    "safetySub": "Confidentiality, checked credentials and a clear policy",
     "trust": [
       {
-        "title": "Sessions are not recorded",
-        "text": "Each session link opens only for you and your counsellor, and no audio or video is stored."
+        "title": "Confidential, never recorded",
+        "text": "Sessions are never recorded and audio and video travel encrypted. Questionnaire answers are stored encrypted and only the counsellor of that session can read them."
       },
       {
-        "title": "What you say stays with us",
-        "text": "Only the counsellor of that session sees your answers. Emails and messages never contain what you shared."
+        "title": "Careful checks on every counsellor",
+        "text": "We check each counsellor’s identity, degree and licence and interview them before they join."
       },
       {
-        "title": "A clear cancellation policy",
-        "text": "Cancel up to 24 hours before a session for a full refund, or move it to another time."
+        "title": "Free cancellation up to 24 hours before",
+        "text": "If your plans change, you can move your session or get a full refund up to 24 hours before it starts."
       }
     ],
-    "emergencyStrong": "TherapyFarsi is not an emergency service.",
-    "emergencyText": "If you are in immediate danger, call the emergency number of the country you are in right now: 112 in Europe, 999 in the UK. In the UK, call 111 for urgent help that isn’t an emergency.",
+    "faqEyebrow": "Full transparency",
     "faqTitle": "Common questions",
+    "faqSub": "Answers to what people usually ask before their first session",
     "faq": [
       {
         "q": "When can I book my first session?",
@@ -134,18 +169,17 @@
         "a": "Each counsellor’s page shows the price of a 50-minute session in euros or pounds. You pay by bank card, Apple Pay or Google Pay."
       }
     ],
-    "footerTagline": "Online counselling and psychotherapy in Persian",
-    "footerCopy": "© 2026 TherapyFarsi",
-    "contactTitle": "Another question?",
+    "contactTitle": "Still have a question?",
     "contactText": "Message us on WhatsApp about the site, when sessions start, or joining as a counsellor. Please don’t write your personal history or what you want to work on; that belongs in a session.",
     "contactCta": "Message on WhatsApp",
-    "whyLead": "Even if your English or German is excellent, your sorrows speak Persian.",
-    "whyBody": "When you feel low or your head is full, the last thing you want is to hunt for words in another language, or spend an hour explaining to a non-Iranian counsellor how an Iranian family works, what “taarof” means, and why, from this far away, your family’s worries still sit on your shoulders.",
-    "storyTitle": "Why TherapyFarsi?",
-    "storyBody": [
-      "Migration isn’t only a change of map; sometimes it means losing a piece of yourself in a new country. TherapyFarsi started from that experience.",
-      "We know the Sunday-evening homesickness in Europe, being stuck between staying and going back, and how hard it is to say your deepest pain in a second language. We want a place where you can talk without censoring yourself, without fear of judgement, in your mother tongue, with someone who understands you."
-    ]
+    "emergencyStrong": "Important:",
+    "emergencyText": "TherapyFarsi is not an emergency service. If you are in crisis or thinking about harming yourself, call the emergency number of the country you are in right now: 112 in the EU, 999 in the UK (and 111 for urgent help that isn’t an emergency).",
+    "footerDesc": "Online counselling and psychotherapy in Persian for Iranians and Persian speakers living in Europe and the UK.",
+    "footerLinks": "Quick links",
+    "footerContact": "Contact",
+    "footerWhatsapp": "WhatsApp support:",
+    "footerCopy": "© 2026 TherapyFarsi (TherapyFarsi.com)",
+    "footerNote": "Built with respect for the mother tongue and the mental health of immigrants"
   },
   "callTest": {
     "title": "Call test",
