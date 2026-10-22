@@ -65,7 +65,8 @@ export default async function HomePage() {
   const why = t.raw('why') as Item[];
   const steps = t.raw('steps') as Item[];
   const trust = t.raw('trust') as Item[];
-  const topics = t.raw('topics') as string[];
+  const topics = t.raw('topics') as Item[];
+  const story = t.raw('storyBody') as string[];
   const faq = t.raw('faq') as Faq[];
 
   const jsonLd = {
@@ -122,6 +123,8 @@ export default async function HomePage() {
 
         <section id="why" className={s.section} aria-labelledby="why-title">
           <h2 id="why-title" className={s.h2}>{t('whyTitle')}</h2>
+          <p className={s.lead}>{t('whyLead')}</p>
+          <p className={s.leadBody}>{t('whyBody')}</p>
           <ul className={s.three}>
             {why.map((w) => (
               <li key={w.title}><h3>{w.title}</h3><p>{w.text}</p></li>
@@ -132,7 +135,9 @@ export default async function HomePage() {
         <section className={s.section} aria-labelledby="topics-title">
           <h2 id="topics-title" className={s.h2}>{t('topicsTitle')}</h2>
           <ul className={s.topics}>
-            {topics.map((topic) => <li key={topic}>{topic}</li>)}
+            {topics.map((topic) => (
+              <li key={topic.title}><h3>{topic.title}</h3><p>{topic.text}</p></li>
+            ))}
           </ul>
           <p className={s.note}>{t('topicsNote')}</p>
         </section>
@@ -147,6 +152,13 @@ export default async function HomePage() {
               </li>
             ))}
           </ol>
+        </section>
+
+        <section className={s.section} aria-labelledby="story-title">
+          <h2 id="story-title" className={s.h2}>{t('storyTitle')}</h2>
+          <div className={s.story}>
+            {story.map((para) => <p key={para}>{para}</p>)}
+          </div>
         </section>
 
         <section className={s.section} aria-labelledby="trust-title">

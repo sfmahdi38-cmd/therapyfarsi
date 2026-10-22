@@ -68,11 +68,23 @@
 .three h3 { font-size: 18px; margin: 0 0 6px; }
 .three p { margin: 0; color: var(--muted); font-size: 15.5px; }
 
-.topics { display: flex; flex-wrap: wrap; gap: 10px 12px; margin: 0; padding: 0; list-style: none; }
-.topics li {
-  padding: 8px 20px; border-radius: 999px; font-size: 16px;
-  background: var(--surface); border: 1px solid var(--line);
+.lead {
+  font-family: var(--display); font-weight: 700; color: var(--cypress);
+  font-size: clamp(22px, 2.6vw, 32px); line-height: 2.2; margin: 0 0 6px; max-width: 30em;
 }
+.leadBody { margin: 0 0 40px; color: var(--muted); font-size: 17px; max-width: 42em; }
+
+.topics {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px 32px;
+  margin: 0; padding: 0; list-style: none;
+}
+.topics li { border-top: 2px solid var(--firouzeh); padding-top: 12px; }
+.topics h3 { margin: 0 0 4px; font-size: 16.5px; }
+.topics p { margin: 0; color: var(--muted); font-size: 15px; }
+
+.story { max-width: 44em; }
+.story p { margin: 0 0 14px; font-size: 17px; color: var(--ink); }
+.story p:last-child { margin-bottom: 0; color: var(--muted); }
 .note { margin: 22px 0 0; color: var(--muted); font-size: 15.5px; }
 
 .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin: 0; padding: 0; list-style: none; }
@@ -120,5 +132,6 @@
   .arch { max-width: 260px; }
   .lede { font-size: 17.5px; }
   .three, .steps { grid-template-columns: 1fr; gap: 28px; }
+  .topics { grid-template-columns: 1fr 1fr; gap: 22px 20px; }
   .section { padding: 56px 0; }
 }

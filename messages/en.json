@@ -33,14 +33,38 @@
     ],
     "topicsTitle": "What can we talk about?",
     "topics": [
-      "Homesickness and migration grief",
-      "Loneliness",
-      "Anxiety and worry",
-      "Low mood and depression",
-      "Relationships and family",
-      "Work, study and visa pressure",
-      "Between two cultures",
-      "Sleep"
+      {
+        "title": "Homesickness and migration grief",
+        "text": "Being far from family, missing the good and bad days of people you love, and feeling a stranger in a new country."
+      },
+      {
+        "title": "Loneliness",
+        "text": "When there are people around you, but nobody you can really talk to."
+      },
+      {
+        "title": "Anxiety and worry",
+        "text": "Racing thoughts about the future, constant unease, and sometimes panic attacks."
+      },
+      {
+        "title": "Low mood and depression",
+        "text": "When nothing makes you happy, you have no energy, and the days just pass."
+      },
+      {
+        "title": "Relationships and family",
+        "text": "Tension with a partner abroad, or pressure from family back home. Sessions are one-to-one."
+      },
+      {
+        "title": "Work, study and visa pressure",
+        "text": "Burnout, visa and residence stress, and finding your feet in a new place."
+      },
+      {
+        "title": "Between two cultures",
+        "text": "The feeling that you don’t fully belong there, or here."
+      },
+      {
+        "title": "Sleep and mental exhaustion",
+        "text": "A mind that won’t switch off at night, and tiredness that rest doesn’t fix."
+      }
     ],
     "topicsNote": "If your topic isn’t on this list, that’s fine. Start from where you are.",
     "howTitle": "How it works",
@@ -74,7 +98,7 @@
       }
     ],
     "emergencyStrong": "TherapyFarsi is not an emergency service.",
-    "emergencyText": "If you are in immediate danger, call the emergency number of the country you are in right now: 112 in Europe, 999 in the UK.",
+    "emergencyText": "If you are in immediate danger, call the emergency number of the country you are in right now: 112 in Europe, 999 in the UK. In the UK, call 111 for urgent help that isn’t an emergency.",
     "faqTitle": "Common questions",
     "faq": [
       {
@@ -84,6 +108,14 @@
       {
         "q": "Who are the counsellors?",
         "a": "Experienced Persian-speaking psychologists and counsellors who know life in Europe and the worries that come with migration. Some live in Europe themselves and some in Iran; each counsellor’s location is shown on their own page. Their identity and professional credentials are checked before they join."
+      },
+      {
+        "q": "Is what I say confidential?",
+        "a": "Yes. Sessions are not recorded and audio and video travel encrypted. Questionnaire answers are stored encrypted and only the counsellor of that session can read them."
+      },
+      {
+        "q": "What if I don’t click with my counsellor after the first session?",
+        "a": "A good fit with your counsellor matters more than anything. If it doesn’t feel right, support will help you book your next session with another counsellor who suits you better."
       },
       {
         "q": "Which countries can I use it from?",
@@ -98,15 +130,22 @@
         "a": "You can carry on with audio only. If a session is cut short by a connection problem, you can move it for free or get your money back."
       },
       {
-        "q": "How do I pay?",
-        "a": "By international card, Apple Pay or Google Pay. The price of each session is shown before you book."
+        "q": "How much does it cost and how do I pay?",
+        "a": "Each counsellor’s page shows the price of a 50-minute session in euros or pounds. You pay by bank card, Apple Pay or Google Pay."
       }
     ],
     "footerTagline": "Online counselling and psychotherapy in Persian",
     "footerCopy": "© 2026 TherapyFarsi",
     "contactTitle": "Another question?",
     "contactText": "Message us on WhatsApp about the site, when sessions start, or joining as a counsellor. Please don’t write your personal history or what you want to work on; that belongs in a session.",
-    "contactCta": "Message on WhatsApp"
+    "contactCta": "Message on WhatsApp",
+    "whyLead": "Even if your English or German is excellent, your sorrows speak Persian.",
+    "whyBody": "When you feel low or your head is full, the last thing you want is to hunt for words in another language, or spend an hour explaining to a non-Iranian counsellor how an Iranian family works, what “taarof” means, and why, from this far away, your family’s worries still sit on your shoulders.",
+    "storyTitle": "Why TherapyFarsi?",
+    "storyBody": [
+      "Migration isn’t only a change of map; sometimes it means losing a piece of yourself in a new country. TherapyFarsi started from that experience.",
+      "We know the Sunday-evening homesickness in Europe, being stuck between staying and going back, and how hard it is to say your deepest pain in a second language. We want a place where you can talk without censoring yourself, without fear of judgement, in your mother tongue, with someone who understands you."
+    ]
   },
   "callTest": {
     "title": "Call test",
