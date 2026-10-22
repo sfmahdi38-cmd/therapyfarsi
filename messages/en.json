@@ -103,7 +103,10 @@
       }
     ],
     "footerTagline": "Online counselling and psychotherapy in Persian",
-    "footerCopy": "© 2026 TherapyFarsi"
+    "footerCopy": "© 2026 TherapyFarsi",
+    "contactTitle": "Another question?",
+    "contactText": "Message us on WhatsApp about the site, when sessions start, or joining as a counsellor. Please don’t write your personal history or what you want to work on; that belongs in a session.",
+    "contactCta": "Message on WhatsApp"
   },
   "callTest": {
     "title": "Call test",

@@ -6,6 +6,8 @@ type Item = { title: string; text: string };
 type Faq = { q: string; a: string };
 
 const SITE = 'https://therapyfarsi.com';
+// Owner's support line (spec 17: WhatsApp is the site's number, for times and connection only).
+const WHATSAPP = { link: 'https://wa.me/447514444142', display: '+44 7514 444142', tel: '+447514444142' };
 
 /** A Persian pointed arch opening onto a European street at dusk; one window is lit. */
 function ArchWindow({ label }: { label: string }) {
@@ -73,6 +75,7 @@ export default async function HomePage() {
     alternateName: 'تراپی‌فارسی',
     url: SITE,
     description: tMeta('description'),
+    contactPoint: { '@type': 'ContactPoint', telephone: WHATSAPP.tel, contactType: 'customer support', availableLanguage: ['fa', 'en'] },
   };
 
   return (
@@ -168,12 +171,24 @@ export default async function HomePage() {
               </details>
             ))}
           </div>
+          <div className={s.contact}>
+            <div>
+              <h3>{t('contactTitle')}</h3>
+              <p>{t('contactText')}</p>
+            </div>
+            <a className={`${s.btn} ${s.primary}`} href={WHATSAPP.link} target="_blank" rel="noopener noreferrer">
+              {t('contactCta')}
+            </a>
+          </div>
         </section>
       </main>
 
       <footer className={s.footer}>
         <span>{t('footerCopy')}</span>
         <span>{t('footerTagline')}</span>
+        <a className={s.phone} href={WHATSAPP.link} target="_blank" rel="noopener noreferrer" dir="ltr">
+          WhatsApp {WHATSAPP.display}
+        </a>
       </footer>
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
